@@ -20,7 +20,9 @@ def run():
     files = [os.path.join(images_path, p)
              for p in sorted(os.listdir(images_path))]
     # getting 3 random images
-    sample = random.sample(files, 2)
+    # sample = random.sample(files, 1)
+    # print(sample)
+    sample = ['resources/images/image9.jpg']
 
     ma = Matcher(images_path)
 
@@ -32,7 +34,7 @@ def run():
         for i in range(10):
             # we got cosine distance, less cosine distance between vectors
             # more they similar, thus we subtruct it from 1 to get match value
-            print('Match %s' % (1-match[i]))
+            print('Match %.8f' % (1-match[i]))
             # show_img(os.path.join(images_path, names[i]))
 
 

@@ -4,7 +4,7 @@ from cv2 import imread
 
 
 # Feature extractor
-def extract_features(image_path, vector_size=32):
+def extract_features(image_path, vector_size=64):
     image = imread(image_path)
     try:
         # Using KAZE, cause SIFT, ORB and other was moved to additional module
