@@ -9,7 +9,7 @@ from Matcher import Matcher
 from GUI import *
 
 #==-- TKINTER GUI --==#
-
+global methodpick
 
 
 ### Make new frame, including it's canvas and inner frame
@@ -20,7 +20,7 @@ def new_frame(h, w=500, scrollbar=False):
     #
     outer.append(Frame(root,relief=GROOVE,width=w,height=h,bd=1))
     outer[-1].place(x=frameposx,y=frameposy)
-    frameposy += (h+15)
+    frameposx += (w+15)
     canvas.append(Canvas(outer[-1]))
     inner.append(Frame(canvas[-1]))
     #
@@ -35,6 +35,7 @@ def new_frame(h, w=500, scrollbar=False):
 
 ### Configure scrollbar for canvas
 def conf_frame(event):
+    global width_temp, height_temp
     canvas[-1].configure(scrollregion=canvas[-1].bbox("all"),width=width_temp,height=height_temp)
 
 ### New text label
@@ -103,6 +104,7 @@ def do_match():
 
 ### Initialize frame #0
 def init_frame0():
+    global methodpick
     new_frame(h=270, w=600)
     new_image(i=0, path="title.png", w=400, h=100, x=1)
     new_button(i=0, txt="Select database directory", cmd=select_db, incy=0)
@@ -111,21 +113,22 @@ def init_frame0():
     new_text(i=0, key="querypath", txt=querypath, x=1, bgcolor="white", fgcolor="red")
     new_button(i=0, key="extract_button", txt="Extract now", cmd=create_matcher, btnstate="disabled", incy=0)
     new_text(i=0, key="extract_status", txt=progress, x=1, bgcolor="white", fgcolor="gray")
-    new_text(i=0, txt="Extraction method:", incy=0)
+    new_text(i=0, txt="Matching method:", incy=0)
     rbframe = Frame(inner[0])
     rbframe.grid(row=rowg[0], column=1, sticky="nesw")
-    methodpick = StringVar()
-    Radiobutton(rbframe, text="Cosine", variable=methodpick, value="cosine").grid(row=0,column=0)
-    Radiobutton(rbframe, text="Euclidean", variable=methodpick, value="euclidean").grid(row=0,column=1)
+    methodpick = IntVar()
+    methodpick.set(0)
+    Radiobutton(rbframe, text="Cosine", variable=methodpick, value=0).grid(row=0,column=0)
+    Radiobutton(rbframe, text="Euclidean", variable=methodpick, value=1).grid(row=0,column=1)
     rowg[0] += 1
     new_button(i=0, key="match_button", txt="Match!", cmd=do_match, btnstate="disabled", incy=0)
 
 def init_frame1():
-    new_frame(h=300, w=500, scrollbar=True) # frame #1
+    new_frame(h=600, w=450, scrollbar=True) # frame #1
 
 def init_gui():
     global root
-    sizex = 700
+    sizex = 1200
     sizey = 600
     posx  = 100
     posy  = 100
@@ -134,8 +137,6 @@ def init_gui():
     init_frame0()
     init_frame1()
 
-    #
-    #Label(frame, image=img).grid(row=0, column=0)
     root.mainloop()
 
 def show_img(path):
@@ -146,17 +147,16 @@ def show_img(path):
 
 
 def run():
-        new_text(i=1, txt='Query image ==========================================')
-        new_image(i=1, path=querypath, w=200, h=200)
-        names, match = ma.match(querypath, topn=10)
-        new_text(i=1, txt='Result images ========================================')
-        for i in range(10):
-            # we got cosine distance, less cosine distance between vectors
-            # more they similar, thus we subtruct it from 1 to get match value
-            new_text(i=1, txt=('Match %.8f' % (1-match[i])))
-            # show_img(os.path.join(images_path, names[i]))
-            print(names)
-            new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=200, h=200)
+    new_text(i=1, txt='Query image ==========================================')
+    new_image(i=1, path=querypath, w=200, h=200)
+    names, match = ma.match(querypath, topn=10, method=methodpick.get())
+    new_text(i=1, txt='Result images ========================================')
+    for i in range(10):
+        # we got cosine distance, less cosine distance between vectors
+        # more they similar, thus we subtruct it from 1 to get match value
+        new_text(i=1, txt=('Match %.8f' % (1-match[i])))
+        # show_img(os.path.join(images_path, names[i]))
+        new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=200, h=200)
 
 
 init_gui()

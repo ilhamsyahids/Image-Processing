@@ -66,12 +66,12 @@ class Matcher(object):
             value += (vector[i])**2
         return sqrt(value)
 
-    def match(self, image_path, topn=10, method='cosine'):
+    def match(self, image_path, topn=10, method=0):
         features = extract_features(image_path)
-        if (method == 'cosine'):
+        if (method == 0):
             img_distances = self.cosine(features)
         else:
-            img_distances = self.euclidean_dist(features)
+            img_distances = self.euclidean(features)
 
         # getting top 10 records
         nearest_ids = np.argsort(img_distances)[:topn].tolist()
