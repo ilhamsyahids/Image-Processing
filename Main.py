@@ -39,12 +39,12 @@ def conf_frame(event):
     canvas[-1].configure(scrollregion=canvas[-1].bbox("all"),width=width_temp,height=height_temp)
 
 ### New text label
-def new_text(i, txt, key=str(defkey), incy=1, y="default", x=0, bgcolor="SystemMenu", fgcolor="black"):
+def new_text(i, txt, key=str(defkey), incy=1, y="default", x=0, bgcolor="SystemMenu", fgcolor="black", formatting="TkDefaultFont"):
     global rowg, defkey, labels
     if(y == "default"):
         y = rowg[i]
     #
-    labels[key] = Label(inner[i], text=txt, bg=bgcolor, fg=fgcolor)
+    labels[key] = Label(inner[i], text=txt, bg=bgcolor, fg=fgcolor, font=formatting)
     labels[key].grid(row=y, column=x, sticky='ew', padx=2, pady=2)
     root.update()
     rowg[i] += incy
@@ -57,17 +57,17 @@ def new_image(i, path, w, h, incy=1, y="default", x=0):
         y = rowg[i]
     #
     img.append(ImageTk.PhotoImage(Image.open(path).resize((w,h), Image.ANTIALIAS)))
-    Label(inner[i], image=img[-1]).grid(row=y, column=x, sticky='w')
+    Label(inner[i], image=img[-1]).grid(row=y, column=x, sticky='ew')
     root.update()
     rowg[i] += incy
 
 ### New button
-def new_button(i, txt, cmd, key=str(defkey), btnstate="normal", incy=1, y="default", x=0):
+def new_button(i, txt, cmd, key=str(defkey), btnstate="normal", incy=1, y="default", x=0, formatting="TkDefaultFont"):
     global rowg, defkey, buttons
     if(y == "default"):
         y = rowg[i]
     #
-    buttons[key] = Button(inner[i], text=txt, command=cmd, state=btnstate)
+    buttons[key] = Button(inner[i], text=txt, command=cmd, state=btnstate, font=formatting)
     buttons[key].grid(row=y, column=x, sticky='ew', padx=2, pady=2)
     root.update()
     rowg[i] += incy
@@ -124,11 +124,11 @@ def init_frame0():
     new_button(i=0, key="match_button", txt="Match!", cmd=do_match, btnstate="disabled", incy=0)
 
 def init_frame1():
-    new_frame(h=600, w=450, scrollbar=True) # frame #1
+    new_frame(h=550, w=250, scrollbar=True) # frame #1
 
 def init_gui():
     global root
-    sizex = 1200
+    sizex = 1000
     sizey = 600
     posx  = 100
     posy  = 100
@@ -147,16 +147,16 @@ def show_img(path):
 
 
 def run():
-    new_text(i=1, txt='Query image ==========================================')
+    new_text(i=1, txt='Query image', formatting="Consolas 13 bold", fgcolor="cyan", bgcolor="black")
     new_image(i=1, path=querypath, w=200, h=200)
     names, match = ma.match(querypath, topn=10, method=methodpick.get())
-    new_text(i=1, txt='Result images ========================================')
+    new_text(i=1, txt='Result images', formatting="Consolas 12 bold", fgcolor="white", bgcolor="black")
     for i in range(10):
         # we got cosine distance, less cosine distance between vectors
         # more they similar, thus we subtruct it from 1 to get match value
-        new_text(i=1, txt=('Match %.8f' % (1-match[i])))
+        new_text(i=1, txt=('Match %.8f' % (1-match[i])), formatting="Consolas 9", bgcolor="yellow")
         # show_img(os.path.join(images_path, names[i]))
-        new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=200, h=200)
+        new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=170, h=170)
 
 
 init_gui()

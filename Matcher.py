@@ -16,11 +16,11 @@ class Matcher(object):
                  for p in sorted(os.listdir(images_path))]
         result = {}
         for f in files:
-            labels["extract_status"].config(text=('Extracting features from image %s' % f), fg="black")
+            labels["extract_status"].config(text=('Extracting features from image %s' % f), fg="blue")
             root.update()
             name = f.split('/')[-1].lower()
             result[name] = extract_features(f)
-        labels["extract_status"].config(text="Extraction done", fg="blue")
+        labels["extract_status"].config(text="Extraction done", fg="black")
 
         self.data = result
         self.names = []
