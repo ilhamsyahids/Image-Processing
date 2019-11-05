@@ -6,18 +6,21 @@ import scipy
 import os
 from math import sqrt
 
+from GUI import *
 from Extract_Features import extract_features
-
 
 class Matcher(object):
     def __init__(self, images_path):
+        global labels
         files = [os.path.join(images_path, p)
                  for p in sorted(os.listdir(images_path))]
         result = {}
         for f in files:
-            # print('Extracting features from image %s' % f)
+            labels["extract_status"].config(text=('Extracting features from image %s' % f), fg="black")
+            root.update()
             name = f.split('/')[-1].lower()
             result[name] = extract_features(f)
+        labels["extract_status"].config(text="Extraction done", fg="blue")
 
         self.data = result
         self.names = []
