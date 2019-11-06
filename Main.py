@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 from Matcher import Matcher
 from GUI import *
+from tkinter import filedialog
 
 #==-- TKINTER GUI --==#
 global methodpick
