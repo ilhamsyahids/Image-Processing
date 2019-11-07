@@ -155,7 +155,10 @@ def run():
     for i in range(10):
         # we got cosine distance, less cosine distance between vectors
         # more they similar, thus we subtruct it from 1 to get match value
-        new_text(i=1, txt=('Match %.8f' % (1-match[i])), formatting="Consolas 9", bgcolor="yellow")
+        if(methodpick.get()==0):
+            new_text(i=1, txt=('Match %.8f' % (1-match[i])), formatting="Consolas 9", bgcolor="yellow")
+        else:
+            new_text(i=1, txt=('Match %.8f' % (1-match[i]/2)), formatting="Consolas 9", bgcolor="yellow")
         # show_img(os.path.join(images_path, names[i]))
         new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=170, h=170)
 

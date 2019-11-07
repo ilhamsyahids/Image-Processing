@@ -45,8 +45,10 @@ class Matcher(object):
 
     def compareEuclidean(self, vector1, vector2):
         dist = 0
+        norm1 = self.norm(vector1)
+        norm2 = self.norm(vector2)
         for i in range(len(vector1)):
-            dist += (vector1[i] - vector2[i])**2
+            dist += (vector1[i]/norm1 - vector2[i]/norm2)**2
         return sqrt(dist)
 
     def compareCosine(self, vector1, vector2):
