@@ -14,7 +14,7 @@ global methodpick
 
 
 ### Make new frame, including it's canvas and inner frame
-def new_frame(h, w=500, scrollbar=False):
+def new_frame(h, w=500, scrollbar=False, orientv="vertical", sidev="right", fillv="y"):
     global outer, canvas, inner, scrolly, frameposx, frameposy, width_temp, height_temp
     width_temp = w
     height_temp = h
@@ -26,9 +26,13 @@ def new_frame(h, w=500, scrollbar=False):
     inner.append(Frame(canvas[-1]))
     #
     if(scrollbar):
-        scrolly.append(Scrollbar(outer[-1],orient="vertical",command=canvas[-1].yview))
-        canvas[-1].configure(yscrollcommand=scrolly[-1].set)
-        scrolly[-1].pack(side="right",fill="y")
+        if(fillv == "y"):
+            scrolly.append(Scrollbar(outer[-1],orient=orientv,command=canvas[-1].yview))
+            canvas[-1].configure(yscrollcommand=scrolly[-1].set)
+        else:
+            scrolly.append(Scrollbar(outer[-1],orient=orientv,command=canvas[-1].xview))
+            canvas[-1].configure(xscrollcommand=scrolly[-1].set)
+        scrolly[-1].pack(side=sidev,fill=fillv)
     #
     canvas[-1].pack(side="left")
     canvas[-1].create_window((0,0),window=inner[-1],anchor='nw')
@@ -106,7 +110,7 @@ def do_match():
 ### Initialize frame #0
 def init_frame0():
     global methodpick
-    new_frame(h=270, w=600)
+    new_frame(h=270, w=700)# scrollbar=True, orientv="horizontal", sidev="bottom", fillv="x")
     new_image(i=0, path="title.png", w=400, h=100, x=1)
     new_button(i=0, txt="Select database directory", cmd=select_db, incy=0)
     new_text(i=0, key="dbpath", txt=dbpath, x=1, bgcolor="white", fgcolor="red")
@@ -129,7 +133,7 @@ def init_frame1():
 
 def init_gui():
     global root
-    sizex = 1000
+    sizex = 1200
     sizey = 600
     posx  = 100
     posy  = 100
@@ -160,7 +164,7 @@ def run():
         else:
             new_text(i=1, txt=('Match %.8f' % (1-match[i]/2)), formatting="Consolas 9", bgcolor="yellow")
         # show_img(os.path.join(images_path, names[i]))
-        new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=170, h=170)
+        new_image(i=1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=160, h=160)
 
 
 init_gui()
