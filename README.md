@@ -11,8 +11,8 @@
     </tr>
     <tr>
         <td>1. </td>
-        <td></td>
-        <td>135</td>
+        <td>Farras Mohammad Hibban Faddila</td>
+        <td>13518017</td>
     </tr>
     <tr>
         <td>2.</td>
