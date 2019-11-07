@@ -5,24 +5,30 @@ from scipy import spatial
 import scipy
 import os
 from math import sqrt
-
+import pickle
 from GUI import *
 from Extract_Features import extract_features
 
 class Matcher(object):
-    def __init__(self, images_path):
+    def __init__(self, images_path, mode="Extract from files", pckfile="features.pck"):
         global labels
-        files = [os.path.join(images_path, p)
-                 for p in sorted(os.listdir(images_path))]
-        result = {}
-        for f in files:
-            labels["extract_status"].config(text=('Extracting features from image ".../%s"' % os.path.basename(f)), fg="blue")
-            root.update()
-            name = f.split('/')[-1].lower()
-            result[name] = extract_features(f)
-        labels["extract_status"].config(text="Extraction done", fg="black")
+        if (mode == "Extract from files"):
+            files = [os.path.join(images_path, p)
+                     for p in sorted(os.listdir(images_path))]
+            result = {}
+            for f in files:
+                labels["extract_status"].config(text=('Extracting features from image ".../%s"' % os.path.basename(f)), fg="blue")
+                root.update()
+                name = f.split('/')[-1].lower()
+                result[name] = extract_features(f)
+            labels["extract_status"].config(text="Extraction done", fg="green")
 
-        self.data = result
+            self.data = result
+        else:
+            with open(pckfile, 'rb') as fp:
+                self.data = pickle.load(fp)
+            labels["extract_status"].config(text="Extraction loaded from pickle", fg="green")
+
         self.names = []
         self.matrix = []
         for k, v in self.data.items():
@@ -30,6 +36,12 @@ class Matcher(object):
             self.matrix.append(v)
         self.matrix = np.array(self.matrix)
         self.names = np.array(self.names)
+
+    def save(self, path):
+        if not path.endswith(".pck"):
+            path += ".pck"
+        with open(path, 'wb') as fp:
+            pickle.dump(self.data, fp)
 
     def cosine(self, vector):
         array_cos = []

@@ -4,7 +4,7 @@ from cv2 import imread
 
 
 # Feature extractor
-def extract_features(image_path, vector_size=64):
+def extract_features(image_path, vector_size=32):
     image = imread(image_path)
     try:
         alg = cv2.AKAZE_create()
