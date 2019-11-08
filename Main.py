@@ -196,6 +196,7 @@ def init_gui():
     posx  = 100
     posy  = 100
     root.wm_geometry("%dx%d+%d+%d" % (sizex, sizey, posx, posy))
+    root.title("Pendahulu: Image Proccessing")
     # Create main frames
     init_frame0()
     init_frame1()
