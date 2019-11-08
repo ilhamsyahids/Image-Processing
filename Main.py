@@ -86,7 +86,10 @@ def select_db():
     if (dbpath != ""):
         labels["dbpath"].config(text=shorten_path(dbpath), fg="black")
         buttons["extract_button"].config(state="normal", fg="green")
-        tops.config(state="normal", to=len(next(os.walk(dbpath))[2]))
+        topto = len(next(os.walk(dbpath))[2])
+        if (topto > 20):
+            topto = 20
+        tops.config(state="normal", to=topto)
 
 ### Select file from PC
 def select_query():
