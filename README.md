@@ -1,5 +1,10 @@
-# Image Similarity
+# Image Processing
 
+## How To Run
+In the folder location run:
+#### `python3 Main.py`
+
+## Contributors
 <table>
     <tr>
         <td colspan=3 align="center">Anggota Kelompok :</td>
@@ -16,12 +21,12 @@
     </tr>
     <tr>
         <td>2.</td>
-        <td>Ilham Syahid S</td>
+        <td>Ilham Syahid Syamsudin</td>
         <td>13518028</td>
     </tr>
     <tr>
         <td>3.</td>
-        <td></td>
-        <td>135</td>
+        <td>Dhafin Rayhan Ahmad</td>
+        <td>13518063</td>
     </tr>
 </table>
