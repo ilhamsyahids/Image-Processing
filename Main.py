@@ -220,6 +220,7 @@ def run():
     global topof
     topget = topof.get()
     new_text(i=-1, txt='Query image', formatting="Consolas 13 bold", fgcolor="cyan", bgcolor="black")
+    new_text(i=-1, txt=(os.path.splitext(os.path.basename(querypath))[0]), formatting="Consolas 10 bold", bgcolor="black", fgcolor="white")
     new_image(i=-1, path=querypath, w=200, h=200)
     names, match = ma.match(querypath, topn=topget, method=methodpick.get())
     new_text(i=-1, txt='Result images', formatting="Consolas 12 bold", fgcolor="white", bgcolor="black")
@@ -228,6 +229,7 @@ def run():
         # more they similar, thus we subtruct it from 1 to get match value
         if(methodpick.get()==0):
             new_text(i=-1, txt=('#%d Match %.8f' % (j+1, (1-match[j]))), formatting="Consolas 9", bgcolor="yellow")
+            new_text(i=-1, txt=(os.path.splitext(os.path.basename(names[j]))[0]), formatting="Consolas 8", bgcolor="yellow")
         else:
             new_text(i=-1, txt=('#%d Match %.8f' % (j+1, (1-match[j]/2))), formatting="Consolas 9", bgcolor="yellow")
         new_image(i=-1, path=(os.path.join(dbpath, os.path.basename(names[j]))), w=160, h=160)
