@@ -7,7 +7,7 @@ from cv2 import imread
 def extract_features(image_path, vector_size=32):
     image = imread(image_path)
     try:
-        alg = cv2.AKAZE_create()
+        alg = cv2.KAZE_create()
         kps = alg.detect(image)
         kps = sorted(kps, key=lambda x: -x.response)[:vector_size]
         kps, dsc = alg.compute(image, kps)

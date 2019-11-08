@@ -81,11 +81,12 @@ def new_button(i, txt, cmd, key=str(defkey), btnstate="normal", incy=1, y="defau
 
 ### Select directory from PC
 def select_db():
-    global dbpath, querypath, labels, buttons, matchready
+    global dbpath, querypath, labels, buttons, matchready, tops
     dbpath = filedialog.askdirectory(initialdir=" ", title="Select Database Directory...")
     if (dbpath != ""):
         labels["dbpath"].config(text=shorten_path(dbpath), fg="black")
         buttons["extract_button"].config(state="normal", fg="green")
+        tops.config(state="normal", to=len(next(os.walk(dbpath))[2]))
 
 ### Select file from PC
 def select_query():
@@ -104,7 +105,8 @@ def create_matcher():
         ma = Matcher(dbpath, expick)
     else:
         pckpath = filedialog.askopenfilename(initialdir=" ", title="Select Pickle File...", filetypes = (("Pickle files", "*.pck"), ("All files", "*.*")))
-        ma = Matcher(dbpath, expick, pckpath)
+        if(pckpath != ""):
+            ma = Matcher(dbpath, expick, pckpath)
     matchready = True
     if (querypath != "" and querypath != "(No file selected)"):
         buttons["match_button"].config(state="normal", fg="purple")
@@ -119,11 +121,27 @@ def save_pickle():
 def do_match():
     run()
 
+framesp = [PhotoImage(file='Pendahulu.gif',format = 'gif -index %i' %(i)) for i in range(3)]
+framesa = [PhotoImage(file='About.gif',format = 'gif -index %i' %(i)) for i in range(3)]
+
+def update(ind):
+    frp = framesp[ind]
+    fra = framesa[ind]
+    ind = (ind+1)%3
+    titlep.configure(image=frp)
+    titlea.configure(image=fra)
+    root.after(100, update, ind)
+
 ### Initialize frame #0
 def init_frame0():
-    global methodpick, extractpick
-    new_frame(h=300, w=700)# scrollbar=True, orientv="horizontal", sidev="bottom", fillv="x")
-    new_image(i=0, path="title.png", w=400, h=100, x=1)
+    global methodpick, extractpick, topof, tops, titlep, titlea
+    new_frame(h=360, w=770)# scrollbar=True, orientv="horizontal", sidev="bottom", fillv="x")
+    titlea = Label(inner[0])
+    titlea.grid(row=0, column=0)
+    titlep = Label(inner[0])
+    titlep.grid(row=0, column=1)
+    root.after(0, update, 0)
+    rowg[0] += 1
     new_button(i=0, txt="Select database directory", cmd=select_db, incy=0)
     new_text(i=0, key="dbpath", txt=dbpath, x=1, bgcolor="white", fgcolor="red")
     exframe = Frame(inner[0])
@@ -148,6 +166,12 @@ def init_frame0():
     Radiobutton(rbframe, text="Cosine", variable=methodpick, value=0).grid(row=0,column=0)
     Radiobutton(rbframe, text="Euclidean", variable=methodpick, value=1).grid(row=0,column=1)
     rowg[0] += 1
+    new_text(i=0, txt="Show Results Top of:", incy=0)
+    topof = IntVar()
+    topof.set(1)
+    tops = Scale(inner[0], variable=topof, state="disabled", orient=HORIZONTAL, from_=1, to=1)
+    tops.grid(row=rowg[0], column=1, sticky="ew")
+    rowg[0] += 1
     new_button(i=0, key="match_button", txt="Match!", cmd=do_match, btnstate="disabled")
     new_button(i=0, key="clear_results", txt="Clear results", cmd=clear_frame1)
 
@@ -164,7 +188,7 @@ def clear_frame1():
 
 def init_gui():
     global root
-    sizex = 1200
+    sizex = 1240
     sizey = 600
     posx  = 100
     posy  = 100
@@ -189,18 +213,20 @@ def shorten_path(path):
     # return path
 
 def run():
+    global topof
+    topget = topof.get()
     new_text(i=-1, txt='Query image', formatting="Consolas 13 bold", fgcolor="cyan", bgcolor="black")
     new_image(i=-1, path=querypath, w=200, h=200)
-    names, match = ma.match(querypath, topn=10, method=methodpick.get())
+    names, match = ma.match(querypath, topn=topget, method=methodpick.get())
     new_text(i=-1, txt='Result images', formatting="Consolas 12 bold", fgcolor="white", bgcolor="black")
-    for i in range(10):
+    for j in range(topget):
         # we got cosine distance, less cosine distance between vectors
         # more they similar, thus we subtruct it from 1 to get match value
         if(methodpick.get()==0):
-            new_text(i=-1, txt=('Match %.8f' % (1-match[i])), formatting="Consolas 9", bgcolor="yellow")
+            new_text(i=-1, txt=('#%d Match %.8f' % (j+1, (1-match[j]))), formatting="Consolas 9", bgcolor="yellow")
         else:
-            new_text(i=-1, txt=('Match %.8f' % (1-match[i]/2)), formatting="Consolas 9", bgcolor="yellow")
-        new_image(i=-1, path=(os.path.join(dbpath, os.path.basename(names[i]))), w=160, h=160)
+            new_text(i=-1, txt=('#%d Match %.8f' % (j+1, (1-match[j]/2))), formatting="Consolas 9", bgcolor="yellow")
+        new_image(i=-1, path=(os.path.join(dbpath, os.path.basename(names[j]))), w=160, h=160)
 
 
 init_gui()

@@ -3,7 +3,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 
 ### Global variables
-global rowg, outer, canvas, inner, scrolly, labels, buttons, defkey, img, dbpath, querypath, pckpath, frameposx, frameposy, matchready, progess
+global rowg, outer, canvas, inner, scrolly, labels, buttons, defkey, img, dbpath, querypath, pckpath, topof, frameposx, frameposy, matchready, progess
 rowg = [0, 0]
 outer = []
 canvas = []
